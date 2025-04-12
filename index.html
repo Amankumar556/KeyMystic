@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEYMYSTIC | Professional Typing Trainer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            overflow-x: hidden;
+            line-height: 1.6;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .header-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: linear-gradient(135deg, #6a3093 0%, #a044ff 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.15);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+        }
+        
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .menu-btn {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-line {
+            width: 22px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .menu-btn.active .menu-line:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+        
+        .menu-btn.active .menu-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .menu-btn.active .menu-line:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 70px;
+            left: -300px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: white;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+            z-index: 999;
+            transition: all 0.3s;
+            padding-top: 25px;
+            overflow-y: auto;
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .sidebar a {
+            display: block;
+            padding: 16px 30px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #eee;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar a:hover {
+            background: #f0f4ff;
+            color: #6a3093;
+        }
+        
+        .sidebar a i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .page {
+            min-height: 100vh;
+            padding: 2rem;
+            padding-top: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .page.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+        
+        #start-page {
+            text-align: center;
+            background: linear-gradient(135deg, #6a3093 0%, #a044ff 100%);
+            color: white;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        #start-page .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 90px);
+            overflow: hidden;
+        }
+        
+        .logo {
+            font-size: clamp(2.5rem, 10vw, 4rem);
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            padding: 0 1.5rem;
+        }
+        
+        .btn {
+            background-color: white;
+            color: #6a3093;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin: 0.7rem;
+            width: 220px;
+            max-width: 80%;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        #instructions-page {
+            text-align: center;
+            background: linear-gradient(135deg, #8435d4 0%, #ac59ff 100%);
+            color: white;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        #instructions-page .content-wrapper {
+            height: calc(100vh - 90px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .instructions-card {
+            color: #333;
+            overflow: auto;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            width: 95%;
+            height: 100%;
+            max-width: 650px;
+            max-height: 550px;
+        }
+        
+        #typing-page {
+            background-color: #f9f3ff;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .test-container {
+            width: 100%;
+            max-width: 850px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            position: relative;
+            margin: 20px auto;
+            min-height: calc(100vh - 140px);
+        }
+
+        .timer {
+            font-size: clamp(1.5rem, 6vw, 2rem);
+            font-weight: bold;
+            color: #6a3093;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .text-display {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            min-height: 150px;
+            max-height: 30vh;
+            position: relative;
+            overflow-y: auto;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .typing-area {
+            width: 100%;
+            height: 150px;
+            padding: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            resize: none;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s;
+        }
+
+        .typing-area:focus {
+            outline: none;
+            border-color: #6a3093;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .stat-value {
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            font-weight: bold;
+            color: #6a3093;
+        }
+        
+        .character {
+            position: relative;
+            transition: all 0.2s;
+        }
+        
+        .character.correct {
+            color: #28a745;
+        }
+        
+        .character.incorrect {
+            color: #dc3545;
+            text-decoration: underline;
+        }
+        
+        .character.current {
+            background-color: rgba(106, 48, 147, 0.2);
+            border-radius: 3px;
+        }
+        
+        .cheat-alert {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(220, 53, 69, 0.9);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s;
+            pointer-events: none;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .cheat-alert.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .cheat-alert i {
+            font-size: clamp(2rem, 8vw, 3rem);
+            margin-bottom: 1rem;
+            animation: shake 0.5s infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        #results-page {
+            text-align: center;
+            background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .result-card {
+            background-color: white;
+            color: #333;
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin: 0 auto;
+        }
+        
+        .result-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.5rem, 6vw, 2rem);
+            margin-bottom: 1.5rem;
+            color: #8E2DE2;
+            text-transform: uppercase;
+        }
+        
+        .result-stat {
+            margin: 1.5rem 0;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+        }
+        
+        .result-value {
+            font-weight: bold;
+            color: #8E2DE2;
+        }
+        
+        #progress-page {
+            text-align: center;
+            background: linear-gradient(135deg, #5C258D 0%, #4389A2 100%);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .progress-card {
+            background-color: white;
+            color: #333;
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin: 0 auto;
+            overflow-y: auto;
+        }
+        
+        .progress-chart {
+            width: 100%;
+            height: 250px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 15px;
+        }
+        
+        .progress-bar {
+            width: 15%;
+            background: #6a3093;
+            border-radius: 8px 8px 0 0;
+            transition: height 0.5s;
+            position: relative;
+        }
+        
+        .progress-bar-label {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        
+        #about-page {
+            text-align: center;
+            background: linear-gradient(135deg, #614385 0%, #516395 100%);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .about-card {
+            background-color: white;
+            color: #333;
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: left;
+            margin: 0 auto;
+            overflow-y: auto;
+        }
+        
+        .about-card h2 {
+            font-family: 'Poppins', sans-serif;
+            color: #614385;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-transform: uppercase;
+            overflow-y: auto;
+        }
+        
+        .btn-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .ad-container {
+            width: 100%;
+            max-width: 728px;
+            height: 90px;
+            background-color: #f0f0f0;
+            margin: 1.5rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .ad-text {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .typing-area {
+                height: 180px;
+                font-size: 16px;
+            }
+            
+            .text-display {
+                max-height: 25vh;
+            }
+            
+            .btn {
+                padding: 1rem 1.5rem;
+            }
+            
+            .ad-container {
+                height: 70px;
+            }
+            
+            .header-bar {
+                height: 60px;
+                padding: 0 15px;
+            }
+            
+            .logo-icon {
+                font-size: 1.5rem;
+            }
+            
+            .logo-text {
+                font-size: 1.4rem;
+            }
+            
+            #start-page .content-wrapper,
+            #instructions-page .content-wrapper {
+                height: calc(100vh - 80px);
+                padding-bottom: 20px;
+            }
+            
+            .test-container {
+                min-height: calc(100vh - 120px);
+                padding: 1.5rem;
+            }
+            
+            .instructions-card {
+                max-height: 500px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .page {
+                padding: 1rem;
+                padding-top: 80px;
+            }
+            
+            .test-container, .instructions-card, .result-card, .progress-card, .about-card {
+                padding: 1.5rem;
+            }
+            
+            .stat {
+                min-width: 120px;
+                padding: 0.8rem;
+            }
+            
+            .sidebar {
+                width: 250px;
+            }
+            
+            .header-bar {
+                height: 55px;
+            }
+            
+            .logo-text {
+                font-size: 1.2rem;
+            }
+            
+            .test-container {
+                min-height: calc(100vh - 100px);
+                padding: 1rem;
+            }
+            
+            .instructions-card {
+                max-height: 450px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .text-display {
+                max-height: 20vh;
+            }
+            .typing-area {
+                height: 120px;
+            }
+        }
+        
+        input, textarea {
+            autocapitalize: off;
+            autocomplete: off;
+            autocorrect: off;
+            spellcheck: false;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="logo-container">
+            <div class="logo-icon"><i class="fas fa-keyboard"></i></div>
+            <div class="logo-text">KEYMYSTIC</div>
+        </div>
+        <button class="menu-btn" id="menu-btn">
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+        </button>
+    </div>
+    
+    <!-- Sidebar Menu -->
+    <div class="sidebar" id="sidebar">
+        <a href="#" class="menu-item" data-page="start-page"><i class="fas fa-home"></i> Home</a>
+        <a href="#" class="menu-item" data-page="progress-page"><i class="fas fa-chart-line"></i> Progress</a>
+        <a href="#" class="menu-item" data-page="typing-page"><i class="fas fa-keyboard"></i> Practice</a>
+        <a href="#" class="menu-item" data-page="instructions-page"><i class="fas fa-info-circle"></i> Tutorial</a>
+        <a href="#" class="menu-item" data-page="about-page"><i class="fas fa-question-circle"></i> About</a>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Start Page -->
+    <div id="start-page" class="page active">
+        <div class="content-wrapper">
+            <div class="logo">
+                <i class="fas fa-keyboard"></i>
+            </div>
+            <h1>KEYMYSTIC</h1>
+            <p>Improve your typing speed and accuracy with our professional training system</p>
+            
+            <div class="ad-container">
+                <div class="ad-text">Advertisement</div>
+            </div>
+            
+            <button class="btn" id="go-to-typing-btn">BEGIN TEST</button>
+        </div>
+    </div>
+    
+    <!-- Instructions Page -->
+    <div id="instructions-page" class="page">
+        <div class="content-wrapper">
+            <div class="instructions-card">
+                <h2><i class="fas fa-info-circle"></i> TEST INSTRUCTIONS</h2>
+                <p style="text-align: left; margin: 1.5rem 0; line-height: 1.8;">
+                    1. CLICK "START TEST" WHEN READY<br>
+                    2. TYPE THE TEXT SHOWN ABOVE<br>
+                    3. MAINTAIN BOTH SPEED AND ACCURACY<br>
+                    4. TEST AUTO-ENDS AFTER 60 SECONDS<br>
+                    5. TYPE MANUALLY - NO COPY/PASTE
+                </p>
+                
+                <div class="ad-container">
+                    <div class="ad-text">Advertisement</div>
+                </div>
+                
+                <div class="btn-container">
+                    <button class="btn" id="start-test-btn">START TEST</button>
+                    <button class="btn" id="back-to-home-btn">BACK TO HOME</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Typing Test Page -->
+    <div id="typing-page" class="page">
+        <div class="test-container">
+            <div class="timer" id="timer">60</div>
+            
+            <div class="text-display" id="text-display"></div>
+            
+            <textarea class="typing-area" id="typing-area" placeholder="CLICK 'START' TO BEGIN TYPING..." readonly></textarea>
+            
+            <div class="cheat-alert" id="cheat-alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>NO CHEATING!</h3>
+                <p>COPY-PASTING IS NOT ALLOWED</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div>WPM</div>
+                    <div class="stat-value" id="wpm">0</div>
+                </div>
+                <div class="stat">
+                    <div>ACCURACY</div>
+                    <div class="stat-value" id="accuracy">100%</div>
+                </div>
+                <div class="stat">
+                    <div>CHARACTERS</div>
+                    <div class="stat-value" id="chars">0/0</div>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn" id="begin-test-btn">START</button>
+                <button class="btn" id="restart-btn">RESTART</button>
+                <button class="btn" id="home-btn">HOME</button>
+            </div>
+            
+            <div class="ad-container">
+                <div class="ad-text">Advertisement</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Results Page -->
+    <div id="results-page" class="page">
+        <div class="result-card">
+            <div class="result-title">TEST COMPLETED!</div>
+            
+            <div class="result-stat">
+                YOUR SPEED: <span class="result-value" id="final-wpm">0</span> WPM
+            </div>
+            <div class="result-stat">
+                ACCURACY: <span class="result-value" id="final-accuracy">100%</span>
+            </div>
+            <div class="result-stat">
+                CORRECT: <span class="result-value" id="final-correct">0</span> CHARS
+            </div>
+            <div class="result-stat">
+                MISTAKES: <span class="result-value" id="final-incorrect">0</span>
+            </div>
+            
+            <div class="ad-container">
+                <div class="ad-text">Advertisement</div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn" id="try-again-btn" style="background-color: #8E2DE2; color: white;">TRY AGAIN</button>
+                <button class="btn" id="new-home-btn">HOME</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Progress Page -->
+    <div id="progress-page" class="page">
+        <div class="progress-card">
+            <h2><i class="fas fa-chart-line"></i> YOUR PROGRESS</h2>
+            <p>TRACK YOUR TYPING IMPROVEMENT OVER TIME</p>
+            
+            <div class="progress-chart" id="progress-chart">
+                <!-- Progress bars will be generated dynamically -->
+            </div>
+            
+            <div class="result-stat">
+                CURRENT WPM: <span class="result-value" id="current-wpm">0</span>
+            </div>
+            <div class="result-stat">
+                BEST WPM: <span class="result-value" id="best-wpm">0</span>
+            </div>
+            <div class="result-stat">
+                AVERAGE ACCURACY: <span class="result-value" id="avg-accuracy">0%</span>
+            </div>
+            
+            <div class="ad-container">
+                <div class="ad-text">Advertisement</div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn" id="progress-home-btn">HOME</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- About Page -->
+    <div id="about-page" class="page">
+        <div class="about-card">
+            <h2><i class="fas fa-info-circle"></i> ABOUT KEYMYSTIC</h2>
+            <p>KEYMYSTIC IS A PROFESSIONAL TYPING TRAINER DESIGNED TO ENHANCE KEYBOARD SKILLS.</p>
+            
+            <h3 style="margin-top: 1.5rem;">KEY FEATURES:</h3>
+            <ul style="margin: 1.5rem 0 1.5rem 2rem; line-height: 1.8;">
+                <li><i class="fas fa-bolt"></i> REAL-TIME TYPING ANALYTICS</li>
+                <li><i class="fas fa-chart-bar"></i> PROGRESS TRACKING</li>
+                <li><i class="fas fa-shield-alt"></i> CHEATING PREVENTION</li>
+                <li><i class="fas fa-mobile-alt"></i> CROSS-DEVICE COMPATIBILITY</li>
+            </ul>
+            
+            <p>VERSION: 1.0.0 </p>
+            <p>© 2025 KEYMYSTIC. ALL RIGHTS RESERVED.</p>
+            
+            <div class="ad-container">
+                <div class="ad-text">Advertisement</div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn" id="about-home-btn">HOME</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample texts for typing test (with lowercase letters)
+        const sampleTexts = [
+            "The quick brown fox jumps over the lazy dog. This classic sentence contains all letters of the English alphabet. Typing is essential in today's digital world.",
+            "Programming involves writing instructions for computers. JavaScript is used for web development. Modern apps combine HTML, CSS, and JavaScript for interactivity.",
+            "It was the best of times, it was the worst of times. This famous opening from Charles Dickens sets the tone for his historical novel about the French Revolution.",
+            "To learn programming, write actual code. Beginners often start with 'Hello, World!' before complex projects. Regular practice is key to mastering any language.",
+            "The five boxing wizards jump quickly. This sentence contains all 26 letters while being shorter than the classic pangram about foxes and dogs.",
+            "Pack my box with five dozen liquor jugs. Another excellent pangram that's slightly longer but uses common words for better comprehension.",
+            "Bright vixens jump; dozy fowl quack. A short pangram that includes some punctuation marks for typing practice.",
+            "The job requires extra pluck and zeal from every young wage earner. A meaningful pangram that's useful for typing practice.",
+            "Quick wafting zephyrs vex bold Jim. A very short pangram that's challenging to type quickly and accurately.",
+            "How vexingly quick daft zebras jump! An interesting pangram that includes an exclamation mark for practice.",
+            "The quick onyx goblin jumps over the lazy dwarf. A fantasy-themed pangram that's fun to type.",
+            "Waltz, nymph, for quick jigs vex Bud. A very short pangram that includes a comma for punctuation practice."
+        ];
+        
+        // DOM elements
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuItems = document.querySelectorAll('.menu-item');
+        
+        const startPage = document.getElementById('start-page');
+        const instructionsPage = document.getElementById('instructions-page');
+        const typingPage = document.getElementById('typing-page');
+        const resultsPage = document.getElementById('results-page');
+        const progressPage = document.getElementById('progress-page');
+        const aboutPage = document.getElementById('about-page');
+        
+        const goToTypingBtn = document.getElementById('go-to-typing-btn');
+        const startTestBtn = document.getElementById('start-test-btn');
+        const backToHomeBtn = document.getElementById('back-to-home-btn');
+        const beginTestBtn = document.getElementById('begin-test-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const homeBtn = document.getElementById('home-btn');
+        const tryAgainBtn = document.getElementById('try-again-btn');
+        const newHomeBtn = document.getElementById('new-home-btn');
+        const progressHomeBtn = document.getElementById('progress-home-btn');
+        const aboutHomeBtn = document.getElementById('about-home-btn');
+        
+        const textDisplay = document.getElementById('text-display');
+        const typingArea = document.getElementById('typing-area');
+        const timerElement = document.getElementById('timer');
+        const wpmElement = document.getElementById('wpm');
+        const accuracyElement = document.getElementById('accuracy');
+        const charsElement = document.getElementById('chars');
+        const finalWpmElement = document.getElementById('final-wpm');
+        const finalAccuracyElement = document.getElementById('final-accuracy');
+        const finalCorrectElement = document.getElementById('final-correct');
+        const finalIncorrectElement = document.getElementById('final-incorrect');
+        const cheatAlert = document.getElementById('cheat-alert');
+        
+        // Progress elements
+        const progressChart = document.getElementById('progress-chart');
+        const currentWpmElement = document.getElementById('current-wpm');
+        const bestWpmElement = document.getElementById('best-wpm');
+        const avgAccuracyElement = document.getElementById('avg-accuracy');
+        
+        // Game variables
+        let timeLeft = 60;
+        let timer;
+        let currentText = '';
+        let startTime;
+        let correctChars = 0;
+        let totalCharsTyped = 0;
+        let isTyping = false;
+        let lastValue = '';
+        let cheatTimeout;
+        let activeTest = false;
+        
+        // Progress tracking
+        let testHistory = [];
+        try {
+            testHistory = JSON.parse(localStorage.getItem('typingTestHistory')) || [];
+        } catch (e) {
+            console.error("Failed to load test history:", e);
+        }
+        const maxHistoryItems = 30;
+
+        // Initialize the app
+        function init() {
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Initialize progress chart if on progress page
+            if (window.location.hash === '#progress-page') {
+                updateProgressChart();
+            }
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Menu toggle
+            menuBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', closeMenu);
+            
+            // Menu navigation
+            menuItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = item.getAttribute('data-page');
+                    navigateToPage(pageId);
+                    closeMenu();
+                    
+                    if (pageId === 'progress-page') {
+                        updateProgressChart();
+                    }
+                });
+            });
+            
+            // Button event listeners
+            goToTypingBtn.addEventListener('click', () => navigateToPage('instructions-page'));
+            startTestBtn.addEventListener('click', () => {
+                navigateToPage('typing-page');
+                prepareTypingTest();
+            });
+            backToHomeBtn.addEventListener('click', () => navigateToPage('start-page'));
+            beginTestBtn.addEventListener('click', startTypingTest);
+            restartBtn.addEventListener('click', restartTypingTest);
+            homeBtn.addEventListener('click', () => {
+                if (activeTest) {
+                    if (confirm("Are you sure you want to leave? Your current test will be lost.")) {
+                        endTypingTest();
+                        navigateToPage('start-page');
+                    }
+                } else {
+                    navigateToPage('start-page');
+                }
+            });
+            tryAgainBtn.addEventListener('click', tryAgain);
+            newHomeBtn.addEventListener('click', () => navigateToPage('start-page'));
+            progressHomeBtn.addEventListener('click', () => navigateToPage('start-page'));
+            aboutHomeBtn.addEventListener('click', () => navigateToPage('start-page'));
+            
+            // Typing area events
+            typingArea.addEventListener('input', checkTyping);
+            typingArea.addEventListener('paste', preventPaste);
+            typingArea.addEventListener('keydown', detectCopy);
+            typingArea.addEventListener('contextmenu', preventContextMenu);
+        }
+
+        // Menu functions
+        function toggleMenu() {
+            menuBtn.classList.toggle('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeMenu() {
+            menuBtn.classList.remove('active');
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // Navigation function
+        function navigateToPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                if (page.id === pageId) {
+                    page.classList.add('active');
+                    
+                    if (pageId === 'typing-page') {
+                        prepareTypingTest();
+                    }
+                } else {
+                    page.classList.remove('active');
+                }
+            });
+            
+            // Always show header
+            const header = document.querySelector('.header-bar');
+            header.style.display = 'flex';
+        }
+
+        // Typing test functions
+        function prepareTypingTest() {
+            // Select random text
+            currentText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
+            
+            // Display text with character spans
+            textDisplay.innerHTML = '';
+            for (let i = 0; i < currentText.length; i++) {
+                const span = document.createElement('span');
+                span.className = 'character';
+                span.textContent = currentText[i];
+                textDisplay.appendChild(span);
+            }
+            
+            // Highlight first character
+            if (textDisplay.children.length > 0) {
+                textDisplay.children[0].classList.add('current');
+            }
+            
+            // Reset variables
+            timeLeft = 60;
+            timerElement.textContent = timeLeft;
+            typingArea.value = '';
+            typingArea.readOnly = true;
+            lastValue = '';
+            correctChars = 0;
+            totalCharsTyped = 0;
+            wpmElement.textContent = '0';
+            accuracyElement.textContent = '100%';
+            charsElement.textContent = '0/0';
+            cheatAlert.classList.remove('active');
+            beginTestBtn.disabled = false;
+            isTyping = false;
+            activeTest = false;
+            
+            // Clear any existing timer
+            clearInterval(timer);
+        }
+
+        function startTypingTest() {
+            isTyping = true;
+            activeTest = true;
+            timeLeft = 60;
+            timerElement.textContent = timeLeft;
+            startTime = performance.now();
+            beginTestBtn.disabled = true;
+            typingArea.readOnly = false;
+            typingArea.focus();
+            typingArea.value = '';
+            lastValue = '';
+            
+            // Force focus and prevent losing it
+            document.addEventListener('click', preventFocusLoss);
+            
+            // Start countdown timer
+            clearInterval(timer);
+            timer = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                endTypingTest();
+            }
+        }
+
+        function preventFocusLoss(e) {
+            if (e.target !== typingArea && isTyping) {
+                e.preventDefault();
+                typingArea.focus();
+            }
+        }
+
+        function checkTyping() {
+            const typedText = typingArea.value;
+            
+            // Detect if user pasted text (unusual fast typing)
+            if (!isTyping && typedText.length > 5) {
+                showCheatAlert();
+                typingArea.value = '';
+                return;
+            }
+            
+            // Detect if user deleted text to fix mistakes (normal behavior)
+            if (typedText.length < lastValue.length) {
+                lastValue = typedText;
+                return;
+            }
+            
+            // Detect if user added text too fast (possible paste)
+            if (typedText.length - lastValue.length > 10) {
+                showCheatAlert();
+                typingArea.value = lastValue;
+                return;
+            }
+            
+            lastValue = typedText;
+            
+            if (!isTyping && typedText.length > 0) {
+                isTyping = true;
+                startTime = performance.now();
+            }
+            
+            const currentPosition = typedText.length;
+            
+            // Update character highlighting
+            for (let i = 0; i < currentText.length; i++) {
+                const charSpan = textDisplay.children[i];
+                if (charSpan) {
+                    charSpan.classList.remove('correct', 'incorrect', 'current');
+                    
+                    if (i < currentPosition) {
+                        // Compare uppercase versions but preserve original case
+                        if (typedText[i].toUpperCase() === currentText[i].toUpperCase()) {
+                            charSpan.classList.add('correct');
+                        } else {
+                            charSpan.classList.add('incorrect');
+                        }
+                    }
+                }
+            }
+            
+            // Highlight current character
+            if (currentPosition < currentText.length && textDisplay.children[currentPosition]) {
+                textDisplay.children[currentPosition].classList.add('current');
+                
+                // Auto-scroll to current position
+                textDisplay.children[currentPosition].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                });
+            }
+            
+            // Calculate stats
+            calculateStats(typedText);
+            
+            // Check if text is completed
+            if (currentPosition === currentText.length) {
+                endTypingTest();
+            }
+        }
+
+        function calculateStats(typedText) {
+            // Count correct characters (case insensitive)
+            correctChars = 0;
+            for (let i = 0; i < typedText.length; i++) {
+                if (typedText[i].toUpperCase() === currentText[i].toUpperCase()) {
+                    correctChars++;
+                }
+            }
+            totalCharsTyped = typedText.length;
+            
+            // Calculate accuracy
+            const accuracy = totalCharsTyped > 0 ? Math.round((correctChars / totalCharsTyped) * 100) : 100;
+            accuracyElement.textContent = `${accuracy}%`;
+            
+            // Calculate WPM (5 characters = 1 word)
+            const elapsedMinutes = (performance.now() - startTime) / 60000;
+            const words = correctChars / 5;
+            const wpm = elapsedMinutes > 0 ? Math.round(words / Math.max(elapsedMinutes, 0.0167)) : 0;
+            wpmElement.textContent = wpm;
+            
+            // Update characters count
+            charsElement.textContent = `${correctChars}/${totalCharsTyped}`;
+        }
+
+        function endTypingTest() {
+            clearInterval(timer);
+            isTyping = false;
+            activeTest = false;
+            typingArea.readOnly = true;
+            beginTestBtn.disabled = false;
+            document.removeEventListener('click', preventFocusLoss);
+            
+            // Calculate final WPM
+            const elapsedMinutes = (performance.now() - startTime) / 60000;
+            const words = correctChars / 5;
+            const wpm = elapsedMinutes > 0 ? Math.round(words / Math.max(elapsedMinutes, 0.0167)) : 0;
+            
+            // Calculate final accuracy
+            const accuracy = totalCharsTyped > 0 ? Math.round((correctChars / totalCharsTyped) * 100) : 100;
+            const incorrectChars = totalCharsTyped - correctChars;
+            
+            // Save test results to history
+            saveTestResult(wpm, accuracy, correctChars, incorrectChars);
+            
+            // Show results page
+            navigateToPage('results-page');
+            
+            // Display final results
+            finalWpmElement.textContent = wpm;
+            finalAccuracyElement.textContent = `${accuracy}%`;
+            finalCorrectElement.textContent = correctChars;
+            finalIncorrectElement.textContent = incorrectChars;
+        }
+
+        // Anti-cheating functions
+        function preventPaste(e) {
+            e.preventDefault();
+            showCheatAlert();
+        }
+
+        function detectCopy(e) {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C' || e.key === 'x' || e.key === 'X')) {
+                showCheatAlert();
+            }
+        }
+
+        function preventContextMenu(e) {
+            e.preventDefault();
+        }
+
+        function showCheatAlert() {
+            cheatAlert.classList.add('active');
+            typingArea.value = lastValue;
+            
+            // Hide alert after 2 seconds
+            clearTimeout(cheatTimeout);
+            cheatTimeout = setTimeout(() => {
+                cheatAlert.classList.remove('active');
+            }, 2000);
+        }
+
+        // Progress tracking functions
+        function saveTestResult(wpm, accuracy, correctChars, incorrectChars) {
+            const testResult = {
+                date: new Date().toISOString(),
+                wpm: wpm,
+                accuracy: accuracy,
+                correctChars: correctChars,
+                incorrectChars: incorrectChars
+            };
+            
+            testHistory.unshift(testResult);
+            
+            // Keep only the most recent tests
+            if (testHistory.length > maxHistoryItems) {
+                testHistory = testHistory.slice(0, maxHistoryItems);
+            }
+            
+            // Save to localStorage
+            try {
+                localStorage.setItem('typingTestHistory', JSON.stringify(testHistory));
+            } catch (e) {
+                console.error("Failed to save test results:", e);
+                // If storage is full, remove oldest items
+                if (e.name === 'QuotaExceededError') {
+                    testHistory = testHistory.slice(0, Math.floor(maxHistoryItems / 2));
+                    try {
+                        localStorage.setItem('typingTestHistory', JSON.stringify(testHistory));
+                    } catch (e2) {
+                        console.error("Still can't save:", e2);
+                    }
+                }
+            }
+        }
+
+        function updateProgressChart() {
+            if (testHistory.length === 0) {
+                progressChart.innerHTML = '<p>NO TEST DATA AVAILABLE YET. COMPLETE SOME TESTS TO SEE YOUR PROGRESS.</p>';
+                currentWpmElement.textContent = '0';
+                bestWpmElement.textContent = '0';
+                avgAccuracyElement.textContent = '0%';
+                return;
+            }
+            
+            // Clear previous chart
+            progressChart.innerHTML = '';
+            
+            // Calculate stats
+            const currentWpm = testHistory[0].wpm;
+            const bestWpm = Math.max(...testHistory.map(test => test.wpm));
+            const avgAccuracy = Math.round(testHistory.reduce((sum, test) => sum + test.accuracy, 0) / testHistory.length);
+            
+            // Update stats display
+            currentWpmElement.textContent = currentWpm;
+            bestWpmElement.textContent = bestWpm;
+            avgAccuracyElement.textContent = `${avgAccuracy}%`;
+            
+            // Determine how many bars to show (up to 10)
+            const barsToShow = Math.min(10, testHistory.length);
+            const recentTests = testHistory.slice(0, barsToShow);
+            const maxWpm = Math.max(40, bestWpm * 1.2); // Dynamic scaling
+            
+            // Create progress bars
+            recentTests.forEach((test, index) => {
+                const barHeight = (test.wpm / maxWpm) * 100;
+                const bar = document.createElement('div');
+                bar.className = 'progress-bar';
+                bar.style.height = `${barHeight}%`;
+                
+                const label = document.createElement('div');
+                label.className = 'progress-bar-label';
+                
+                // Show date for first, last, and every 3rd bar to avoid clutter
+                if (index === 0 || index === recentTests.length - 1 || index % 3 === 0) {
+                    const date = new Date(test.date);
+                    label.textContent = `${date.getDate()}/${date.getMonth() + 1}`;
+                } else {
+                    label.textContent = '';
+                }
+                
+                bar.appendChild(label);
+                progressChart.appendChild(bar);
+            });
+        }
+
+        // Utility functions
+        function restartTypingTest() {
+            prepareTypingTest();
+        }
+
+        function tryAgain() {
+            navigateToPage('typing-page');
+            prepareTypingTest();
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
